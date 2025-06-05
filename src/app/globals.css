@@ -18,6 +18,9 @@
 	:root {
 		--background: #0a0a0a;
 		--foreground: #ededed;
+		--maintext-dark: #ffffff;
+		--heading-dark: #5d00c7;
+		--maintext: rgb(255, 128, 0);
 	}
 }
 

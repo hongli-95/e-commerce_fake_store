@@ -23,10 +23,15 @@ type Theme = "light" | "dark";
 type StoreState = {
 	theme: Theme;
 	products: Product[];
-	productsDisplay: Product[];
+	filteredProducts: Product[];
+	displayedProducts: Product[];
 	cart: Product[];
 	loading: boolean;
 	filter: string;
+	currentPage: number;
+	productsPerPage: number;
+	startIndex: number;
+	endIndex: number;
 	error: string;
 };
 
@@ -38,15 +43,26 @@ type Action =
 	| { type: "SET_LOADING"; payload: boolean }
 	| { type: "SET_ERROR"; payload: string }
 	| { type: "SET_FILTER"; payload: string }
-	| { type: "SET_DISPLAY"; payload: Product[] };
+	| { type: "SET_CURRENTPAGE"; payload: number }
+	| { type: "NEXT_PAGE" }
+	| { type: "PREV_PAGE" }
+	| { type: "UPDATE_STARTINDEX"; payload: number }
+	| { type: "UPDATE_ENDINDEX"; payload: number }
+	| { type: "SET_DISPLAY"; payload: Product[] }
+	| { type: "SET_FILTERED"; payload: Product[] };
 
 const initialState: StoreState = {
 	theme: "dark",
 	products: [],
-	productsDisplay: [],
+	filteredProducts: [],
+	displayedProducts: [],
 	cart: [],
 	loading: false,
 	filter: "none",
+	currentPage: 1,
+	productsPerPage: 12,
+	startIndex: 0,
+	endIndex: 1,
 	error: "",
 };
 
@@ -70,8 +86,16 @@ function reducer(state: StoreState, action: Action): StoreState {
 			return { ...state, error: action.payload };
 		case "SET_FILTER":
 			return { ...state, filter: action.payload };
+		case "NEXT_PAGE":
+			return { ...state, currentPage: state.currentPage++ };
+		case "PREV_PAGE":
+			return { ...state, currentPage: state.currentPage-- };
+		case "SET_CURRENTPAGE":
+			return { ...state, currentPage: action.payload };
+		case "SET_FILTERED":
+			return { ...state, filteredProducts: action.payload };
 		case "SET_DISPLAY":
-			return { ...state, productsDisplay: action.payload };
+			return { ...state, displayedProducts: action.payload };
 		case "REMOVE_FROM_CART":
 			return {
 				...state,
